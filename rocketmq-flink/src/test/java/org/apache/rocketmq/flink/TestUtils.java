@@ -18,6 +18,9 @@
 
 package org.apache.rocketmq.flink;
 
+import com.alibaba.fastjson.JSON;
+import org.apache.rocketmq.flink.example.sku.SkuOrderEvent;
+
 import java.lang.reflect.Field;
 
 public class TestUtils {
@@ -29,5 +32,11 @@ public class TestUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        String sku="{\"categoryId\":1,\"cityId\":1,\"skuId\":1,\"timestamp\":1569313097706,\"userId\":\"1\"}";
+        SkuOrderEvent skuOrderEvent=JSON.parseObject(sku,SkuOrderEvent.class);
+        System.out.println(skuOrderEvent.getCategoryId());
     }
 }

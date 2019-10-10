@@ -34,7 +34,10 @@ public class ProducerTest {
             e.printStackTrace();
         }
         for (int i = 0; i < 10000; i++) {
-            Message msg = new Message("flink-source2" , "", "id_"+i, ("country_X province_" + i).getBytes());
+
+            Message msg = new Message("flink-source" ,
+                    "", "id_"+i,
+                    ("country_X province_" + i).getBytes());
             try {
                 producer.send(msg);
             } catch (MQClientException e) {

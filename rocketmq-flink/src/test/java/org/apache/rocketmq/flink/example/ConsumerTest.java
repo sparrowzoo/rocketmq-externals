@@ -32,7 +32,7 @@ public class ConsumerTest {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("g00003");
         consumer.setNamesrvAddr("localhost:9876");
         try {
-            consumer.subscribe("flink-sink2", "*");
+            consumer.subscribe("flink-source", "*");
         } catch (MQClientException e) {
             e.printStackTrace();
         }

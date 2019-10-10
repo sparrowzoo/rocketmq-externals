@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
@@ -37,22 +38,26 @@ public class RocketMQFlinkExample {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // enable checkpoint
-        env.enableCheckpointing(3000);
+        env.enableCheckpointing(300000);
 
         Properties consumerProps = new Properties();
         consumerProps.setProperty(RocketMQConfig.NAME_SERVER_ADDR, "localhost:9876");
-        consumerProps.setProperty(RocketMQConfig.CONSUMER_GROUP, "c002");
-        consumerProps.setProperty(RocketMQConfig.CONSUMER_TOPIC, "flink-source2");
+        consumerProps.setProperty(RocketMQConfig.CONSUMER_GROUP, "consumer-group-sku");
+        consumerProps.setProperty(RocketMQConfig.CONSUMER_TOPIC, "flink-source");
 
         Properties producerProps = new Properties();
         producerProps.setProperty(RocketMQConfig.NAME_SERVER_ADDR, "localhost:9876");
+        producerProps.setProperty(RocketMQConfig.PRODUCER_RETRY_TIMES,"10");
 
+        env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
         env.addSource(new RocketMQSource(new SimpleKeyValueDeserializationSchema("id", "address"), consumerProps))
             .name("rocketmq-source")
-            .setParallelism(2)
+            .setParallelism(4)
             .process(new ProcessFunction<Map, Map>() {
                 @Override
                 public void processElement(Map in, Context ctx, Collector<Map> out) throws Exception {
+                    System.err.println(in.get("id"));
+                    System.err.println(in.get("address"));
                     HashMap result = new HashMap();
                     result.put("id", in.get("id"));
                     String[] arr = in.get("address").toString().split("\\s+");
@@ -61,12 +66,16 @@ public class RocketMQFlinkExample {
                 }
             })
             .name("upper-processor")
-            .setParallelism(2)
+            .setParallelism(4)
+
+
+
+
+
             .addSink(new RocketMQSink(new SimpleKeyValueSerializationSchema("id", "province"),
                 new DefaultTopicSelector("flink-sink2"), producerProps).withBatchFlushOnCheckpoint(true))
             .name("rocketmq-sink")
-            .setParallelism(2);
-
+            .setParallelism(4);
         try {
             env.execute("rocketmq-flink-example");
         } catch (Exception e) {
