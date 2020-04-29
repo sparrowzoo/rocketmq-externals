@@ -83,6 +83,8 @@
             <version>${commons-lang.version}</version>
         </dependency>
 
+
+
         <!--test -->
         <dependency>
             <groupId>junit</groupId>
@@ -94,25 +96,37 @@
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4</artifactId>
             <version>1.5.5</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-mockito</artifactId>
             <version>1.5.5</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-namesrv</artifactId>
             <version>${rocketmq.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
             <artifactId>rocketmq-broker</artifactId>
             <version>${rocketmq.version}</version>
-            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.2.3</version>
         </dependency>
     </dependencies>
 
@@ -148,37 +162,17 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>2.17</version>
-                <executions>
-                    <execution>
-                        <id>verify</id>
-                        <phase>verify</phase>
-                        <configuration>
-                            <configLocation>style/rmq_checkstyle.xml</configLocation>
-                            <encoding>UTF-8</encoding>
-                            <consoleOutput>true</consoleOutput>
-                            <failsOnError>true</failsOnError>
-                            <includeTestSourceDirectory>false</includeTestSourceDirectory>
-                            <includeTestResources>false</includeTestResources>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.4</version>
-                <configuration>
-                    <aggregate>true</aggregate>
-                    <reportOutputDirectory>javadocs</reportOutputDirectory>
-                    <locale>en</locale>
-                </configuration>
-            </plugin>
+         <!---->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-javadoc-plugin</artifactId>-->
+                <!--<version>2.10.4</version>-->
+                <!--<configuration>-->
+                    <!--<aggregate>true</aggregate>-->
+                    <!--<reportOutputDirectory>javadocs</reportOutputDirectory>-->
+                    <!--<locale>en</locale>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
         </plugins>
     </build>
 </project>
